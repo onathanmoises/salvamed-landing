@@ -37,6 +37,16 @@ h1 em{font-style:normal;color:var(--teal)}
 .vid video{width:100%;height:100%;object-fit:cover;display:block}
 .som{position:absolute;right:12px;top:12px;display:flex;align-items:center;gap:6px;border:0;border-radius:99px;padding:9px 14px;background:rgba(7,18,31,.72);color:#fff;font:700 .85rem 'Plus Jakarta Sans',system-ui,sans-serif;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .som:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.som{transition:opacity .25s}
+.som.oculto{opacity:0;pointer-events:none}
+.ov{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:20px;background:rgba(7,18,31,.55);color:#fff;text-align:center;font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+.ov.on{display:flex}
+.ov p{font-weight:700;font-size:.95rem;margin-bottom:4px}
+.ov .btn{width:min(100%,240px);text-align:center}
+.ov .alt{background:rgba(255,255,255,.14);box-shadow:none;border:1px solid rgba(255,255,255,.35)}
+.play{width:84px;height:84px;border-radius:50%;border:0;background:rgba(255,255,255,.92);color:var(--navy);display:grid;place-items:center;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.play svg{width:34px;height:34px;margin-left:5px}
+.play:focus-visible,.ov .btn:focus-visible{outline:3px solid var(--teal);outline-offset:3px}
 section{padding:56px 0}
 h2{font-size:clamp(1.5rem,3.5vw,2.1rem);font-weight:800;color:var(--navy);letter-spacing:-.01em;margin-bottom:8px}
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]) h2{color:#fff}}
@@ -87,8 +97,16 @@ footer{padding:26px 0 40px;text-align:center;color:var(--mut);font-size:.85rem}
     <p class="note">Grátis. Durante uma semana, mostramos no canal do WhatsApp tudo o que o SalvaMed faz.</p>
   </div>
   <div class="vid">
-    <video id="vid" src="salvamed-video.mp4" poster="salvamed-video-capa.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Vídeo: o SalvaMed por dentro, em 30 segundos"></video>
+    <video id="vid" src="salvamed-video.mp4" poster="salvamed-video-capa.jpg" autoplay muted playsinline preload="metadata" aria-label="Vídeo: o SalvaMed por dentro, em 30 segundos"></video>
     <button class="som" id="som" type="button" aria-pressed="false">🔇 Ativar som</button>
+    <div class="ov" id="ovRetomar" role="dialog" aria-label="Retomar vídeo">
+      <p>Você parou o vídeo aqui. Como quer continuar?</p>
+      <button class="btn sm" id="continuar" type="button">▶ Continuar de onde parou</button>
+      <button class="btn sm alt" id="reiniciar" type="button">↺ Assistir do início</button>
+    </div>
+    <div class="ov" id="ovFim">
+      <button class="play" id="denovo" type="button" aria-label="Assistir de novo"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></button>
+    </div>
   </div>
 </div></div>
 
@@ -155,14 +173,48 @@ const ENDPOINT = "https://script.google.com/macros/s/AKfycbz_JjhPpJna79HSw1X-C9a
 const CANAL_URL = "https://whatsapp.com/channel/0029Vb9Y29i1t90fJWmAxC1f";
 
 const $ = s => document.querySelector(s);
-const vid = $('#vid'), som = $('#som');
+const vid = $('#vid'), som = $('#som'), ovRetomar = $('#ovRetomar'), ovFim = $('#ovFim');
+let timerSom, pausadoPorRolagem = false;
+const tocar = (inicio) => {
+  if (inicio) vid.currentTime = 0;
+  ovRetomar.classList.remove('on'); ovFim.classList.remove('on');
+  vid.play().catch(() => {});
+};
+// Com som ligado o botão some (não tampa a legenda); toque no vídeo o mostra por alguns segundos.
+const atualizarSom = () => {
+  clearTimeout(timerSom);
+  som.textContent = vid.muted ? '🔇 Ativar som' : '🔊 Desativar som';
+  som.setAttribute('aria-pressed', !vid.muted);
+  som.classList.toggle('oculto', !vid.muted);
+};
 som.addEventListener('click', () => {
-  const ligar = vid.muted;
-  vid.muted = !ligar;
-  if (ligar) { vid.currentTime = 0; vid.play().catch(() => {}); }
-  som.textContent = ligar ? '🔊 Som ligado' : '🔇 Ativar som';
-  som.setAttribute('aria-pressed', ligar);
+  vid.muted = !vid.muted;
+  if (!vid.muted) tocar(true); // ao ligar o som, reinicia do começo
+  atualizarSom();
 });
+vid.addEventListener('click', () => {
+  if (vid.muted) return;
+  som.classList.remove('oculto');
+  clearTimeout(timerSom);
+  timerSom = setTimeout(() => som.classList.add('oculto'), 3000);
+});
+// Ao final: sem loop, mostra o play no centro.
+vid.addEventListener('ended', () => { pausadoPorRolagem = false; ovRetomar.classList.remove('on'); ovFim.classList.add('on'); });
+$('#denovo').addEventListener('click', () => tocar(true));
+$('#continuar').addEventListener('click', () => tocar(false));
+$('#reiniciar').addEventListener('click', () => tocar(true));
+// Ao rolar para longe, pausa; ao voltar, pergunta se continua ou reinicia.
+if ('IntersectionObserver' in window) {
+  new IntersectionObserver(([e]) => {
+    if (e.intersectionRatio < 0.5) {
+      if (!vid.paused && !vid.ended) { vid.pause(); pausadoPorRolagem = true; }
+    } else if (pausadoPorRolagem) {
+      pausadoPorRolagem = false;
+      // Só pergunta se a pessoa já assistiu um trecho; senão apenas volta a tocar.
+      if (vid.currentTime > 2) ovRetomar.classList.add('on'); else tocar(false);
+    }
+  }, { threshold: [0, 0.5, 1] }).observe(vid);
+}
 const wpp = $('#wpp');
 wpp.addEventListener('input', () => {
   let d = wpp.value.replace(/\D/g,'').slice(0,11), o = d;
