@@ -33,8 +33,10 @@ h1{font-size:clamp(2rem,5vw,3.1rem);line-height:1.1;font-weight:800;color:var(--
 h1 em{font-style:normal;color:var(--teal)}
 .hero p.lead{font-size:1.12rem;color:var(--mut);margin:18px 0 24px;max-width:520px}
 .hero .note{font-size:.85rem;color:var(--mut);margin-top:12px}
-.logo-card{background:#fff;border-radius:24px;box-shadow:var(--shadow);padding:18px;text-align:center}
-.logo-card img{width:100%;height:auto;display:block}
+.vid{position:relative;justify-self:center;width:min(100%,calc(min(640px,72vh) * 9 / 16));aspect-ratio:9/16;border-radius:24px;overflow:hidden;background:#0a2f6b;box-shadow:0 18px 40px rgba(10,47,107,.28)}
+.vid video{width:100%;height:100%;object-fit:cover;display:block}
+.som{position:absolute;right:12px;top:12px;display:flex;align-items:center;gap:6px;border:0;border-radius:99px;padding:9px 14px;background:rgba(7,18,31,.72);color:#fff;font:700 .85rem 'Plus Jakarta Sans',system-ui,sans-serif;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.som:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
 section{padding:56px 0}
 h2{font-size:clamp(1.5rem,3.5vw,2.1rem);font-weight:800;color:var(--navy);letter-spacing:-.01em;margin-bottom:8px}
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]) h2{color:#fff}}
@@ -67,7 +69,7 @@ form .btn{width:100%;margin-top:6px}
 .ok{color:var(--teal-d)}.err{color:#c0392b}
 .disc{font-size:.8rem;color:var(--mut);border-top:1px solid var(--line);padding:22px 0;margin-top:40px}
 footer{padding:26px 0 40px;text-align:center;color:var(--mut);font-size:.85rem}
-@media(max-width:800px){.hero .wrap,#entrar .wrap{grid-template-columns:1fr}.logo-card{order:-1;max-width:340px;margin:0 auto}#entrar{margin:0}}
+@media(max-width:800px){.hero{padding:20px 0 28px}.hero .wrap,#entrar .wrap{grid-template-columns:1fr;gap:20px}.vid{order:-1;width:min(100%,calc(62vh * 9 / 16))}.hero p.lead,.hero .btn{display:none}.hero .note{margin-top:8px}#entrar{margin:0}}
 </style>
 </head>
 <body>
@@ -84,8 +86,36 @@ footer{padding:26px 0 40px;text-align:center;color:var(--mut);font-size:.85rem}
     <a class="btn" href="#entrar">Quero entrar no canal</a>
     <p class="note">Grátis. Durante uma semana, mostramos no canal do WhatsApp tudo o que o SalvaMed faz.</p>
   </div>
-  <div class="logo-card"><img src="logo.jpg" alt="SalvaMed — O socorro chegou"></div>
+  <div class="vid">
+    <video id="vid" src="salvamed-video.mp4" poster="salvamed-video-capa.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Vídeo: o SalvaMed por dentro, em 30 segundos"></video>
+    <button class="som" id="som" type="button" aria-pressed="false">🔇 Ativar som</button>
+  </div>
 </div></div>
+
+<section id="entrar"><div class="wrap">
+  <div>
+    <h2>Entre no canal e veja o SalvaMed por dentro</h2>
+    <p class="sub">Uma semana de conteúdo sobre cada funcionalidade do app, direto no seu WhatsApp. Quem entra primeiro acompanha tudo desde o início.</p>
+  </div>
+  <form id="f" novalidate>
+    <input class="hp" type="text" name="site" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <label for="nome">Nome</label>
+    <input id="nome" name="nome" autocomplete="name" required placeholder="Seu nome">
+    <label for="wpp">WhatsApp</label>
+    <input id="wpp" name="whatsapp" type="tel" inputmode="numeric" autocomplete="tel" required placeholder="(64) 99999-9999">
+    <label for="email">E-mail</label>
+    <input id="email" name="email" type="email" autocomplete="email" required placeholder="voce@email.com">
+    <label for="per">Período da faculdade</label>
+    <select id="per" name="periodo" required>
+      <option value="">Selecione</option>
+      <option>9º período</option><option>10º período</option><option>11º período</option><option>12º período</option><option>Já formado(a)</option><option>Outro</option>
+    </select>
+    <label class="chk"><input type="checkbox" id="lgpd" required> <span>Concordo em receber contato do SalvaMed por WhatsApp e e-mail sobre o SalvaMed e aceito o uso dos meus dados para esse fim (LGPD). Posso sair da lista quando quiser.</span></label>
+    <button class="btn" id="btn" type="submit">Quero entrar no canal</button>
+    <div class="msg" id="msg" role="status"></div>
+    <a class="btn" id="grp" href="#" target="_blank" rel="noopener" style="display:none;text-align:center">Entrar no canal do WhatsApp</a>
+  </form>
+</div></section>
 
 <section><div class="wrap">
   <h2>O que tem dentro</h2>
@@ -114,30 +144,6 @@ footer{padding:26px 0 40px;text-align:center;color:var(--mut);font-size:.85rem}
   </div>
 </div></section>
 
-<section id="entrar"><div class="wrap">
-  <div>
-    <h2>Entre no canal e veja o SalvaMed por dentro</h2>
-    <p class="sub">Uma semana de conteúdo sobre cada funcionalidade do app, direto no seu WhatsApp. Quem entra primeiro acompanha tudo desde o início.</p>
-  </div>
-  <form id="f" novalidate>
-    <input class="hp" type="text" name="site" tabindex="-1" autocomplete="off" aria-hidden="true">
-    <label for="nome">Nome</label>
-    <input id="nome" name="nome" autocomplete="name" required placeholder="Seu nome">
-    <label for="wpp">WhatsApp</label>
-    <input id="wpp" name="whatsapp" type="tel" inputmode="numeric" autocomplete="tel" required placeholder="(64) 99999-9999">
-    <label for="email">E-mail</label>
-    <input id="email" name="email" type="email" autocomplete="email" required placeholder="voce@email.com">
-    <label for="per">Período da faculdade</label>
-    <select id="per" name="periodo" required>
-      <option value="">Selecione</option>
-      <option>9º período</option><option>10º período</option><option>11º período</option><option>12º período</option><option>Já formado(a)</option><option>Outro</option>
-    </select>
-    <label class="chk"><input type="checkbox" id="lgpd" required> <span>Concordo em receber contato do SalvaMed por WhatsApp e e-mail sobre o SalvaMed e aceito o uso dos meus dados para esse fim (LGPD). Posso sair da lista quando quiser.</span></label>
-    <button class="btn" id="btn" type="submit">Quero entrar no canal</button>
-    <div class="msg" id="msg" role="status"></div>
-    <a class="btn" id="grp" href="#" target="_blank" rel="noopener" style="display:none;text-align:center">Entrar no canal do WhatsApp</a>
-  </form>
-</div></section>
 
 <div class="wrap"><p class="disc"><b>Aviso importante:</b> o SalvaMed é uma ferramenta de apoio à consulta e ao estudo. Não substitui o julgamento clínico, a supervisão do preceptor/médico responsável nem os protocolos da instituição. Confira sempre doses e condutas antes de aplicar.</p></div>
 <footer>© SalvaMed · O socorro chegou</footer>
@@ -149,6 +155,14 @@ const ENDPOINT = "https://script.google.com/macros/s/AKfycbz_JjhPpJna79HSw1X-C9a
 const CANAL_URL = "https://whatsapp.com/channel/0029Vb9Y29i1t90fJWmAxC1f";
 
 const $ = s => document.querySelector(s);
+const vid = $('#vid'), som = $('#som');
+som.addEventListener('click', () => {
+  const ligar = vid.muted;
+  vid.muted = !ligar;
+  if (ligar) { vid.currentTime = 0; vid.play().catch(() => {}); }
+  som.textContent = ligar ? '🔊 Som ligado' : '🔇 Ativar som';
+  som.setAttribute('aria-pressed', ligar);
+});
 const wpp = $('#wpp');
 wpp.addEventListener('input', () => {
   let d = wpp.value.replace(/\D/g,'').slice(0,11), o = d;
