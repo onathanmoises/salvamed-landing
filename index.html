@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SalvaMed — O socorro chegou</title>
+<meta name="description" content="O app de consulta rápida para quem está no internato de Medicina: drogas, antibióticos, receitas, intubação, ventilação, RX e ECG. Entre na lista de acesso antecipado.">
+<link rel="icon" href="icon.png">
+<meta property="og:title" content="SalvaMed — O socorro chegou">
+<meta property="og:description" content="Consulta rápida para o plantão do internato. Entre na lista de acesso antecipado.">
+<meta property="og:image" content="logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0a2f6b;--blue:#0b4aa0;--teal:#14b8a6;--teal-d:#0f9b8c;--ice:#eefbf9;--ink:#10223f;--mut:#566784;--line:#dbe7ee;--bg:#fff;--card:#fff;--shadow:0 10px 30px rgba(10,47,107,.10)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#07121f;--card:#0d1c2e;--ink:#eaf2fb;--mut:#9fb2c9;--line:#1c3350;--ice:#0b2230;--shadow:0 10px 30px rgba(0,0,0,.4)}}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+header{padding:14px 0}
+header .wrap{display:flex;align-items:center;justify-content:space-between}
+header img{height:54px;border-radius:8px}
+.btn{display:inline-block;background:linear-gradient(135deg,var(--teal),var(--teal-d));color:#fff;font-weight:800;border:0;border-radius:12px;padding:15px 26px;font-size:1rem;text-decoration:none;cursor:pointer;box-shadow:0 8px 20px rgba(20,184,166,.35);font-family:inherit}
+.btn:hover{filter:brightness(1.05)}
+.btn.sm{padding:10px 18px;font-size:.9rem}
+.hero{background:radial-gradient(900px 400px at 85% -10%,rgba(20,184,166,.22),transparent),linear-gradient(180deg,var(--ice),var(--bg));padding:46px 0 60px}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:36px;align-items:center}
+.tag{display:inline-block;background:rgba(20,184,166,.15);color:var(--teal-d);font-weight:700;font-size:.8rem;padding:6px 12px;border-radius:99px;margin-bottom:16px}
+h1{font-size:clamp(2rem,5vw,3.1rem);line-height:1.1;font-weight:800;color:var(--navy);letter-spacing:-.02em}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) h1{color:#fff}}
+h1 em{font-style:normal;color:var(--teal)}
+.hero p.lead{font-size:1.12rem;color:var(--mut);margin:18px 0 24px;max-width:520px}
+.hero .note{font-size:.85rem;color:var(--mut);margin-top:12px}
+.logo-card{background:#fff;border-radius:24px;box-shadow:var(--shadow);padding:18px;text-align:center}
+.logo-card img{width:100%;height:auto;display:block}
+section{padding:56px 0}
+h2{font-size:clamp(1.5rem,3.5vw,2.1rem);font-weight:800;color:var(--navy);letter-spacing:-.01em;margin-bottom:8px}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) h2{color:#fff}}
+.sub{color:var(--mut);margin-bottom:28px;max-width:640px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--shadow)}
+.card .ic{font-size:1.5rem}
+.card h3{font-size:1rem;margin:8px 0 4px;color:var(--navy)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .card h3{color:#fff}}
+.card p{font-size:.9rem;color:var(--mut)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;counter-reset:s}
+.step{position:relative;padding:18px 18px 18px 64px;background:var(--ice);border-radius:16px}
+.step:before{counter-increment:s;content:counter(s);position:absolute;left:16px;top:16px;width:36px;height:36px;border-radius:50%;background:var(--teal);color:#fff;font-weight:800;display:grid;place-items:center}
+.step b{display:block;color:var(--navy)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .step b{color:#fff}}
+.step span{font-size:.9rem;color:var(--mut)}
+#entrar{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;border-radius:28px;margin:0 12px}
+#entrar .wrap{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:center}
+#entrar h2{color:#fff}
+#entrar .sub{color:#cfe0f5}
+form{background:var(--card);color:var(--ink);border-radius:20px;padding:22px;box-shadow:0 18px 40px rgba(0,0,0,.25)}
+label{display:block;font-weight:700;font-size:.85rem;margin:12px 0 5px;color:var(--ink)}
+input,select{width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:12px;font-size:1rem;font-family:inherit;background:var(--bg);color:var(--ink)}
+input:focus,select:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(20,184,166,.25)}
+.chk{display:flex;gap:10px;align-items:flex-start;margin:14px 0;font-size:.8rem;color:var(--mut);font-weight:400}
+.chk input{width:auto;margin-top:3px}
+form .btn{width:100%;margin-top:6px}
+.hp{position:absolute;left:-9999px}
+.msg{margin-top:12px;font-size:.92rem;font-weight:700}
+.ok{color:var(--teal-d)}.err{color:#c0392b}
+.disc{font-size:.8rem;color:var(--mut);border-top:1px solid var(--line);padding:22px 0;margin-top:40px}
+footer{padding:26px 0 40px;text-align:center;color:var(--mut);font-size:.85rem}
+@media(max-width:800px){.hero .wrap,#entrar .wrap{grid-template-columns:1fr}.logo-card{order:-1;max-width:340px;margin:0 auto}#entrar{margin:0}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <img src="logo.jpg" alt="SalvaMed">
+  <a class="btn sm" href="#entrar">Quero acesso</a>
+</div></header>
+
+<div class="hero"><div class="wrap">
+  <div>
+    <span class="tag">Para o internato · 9º ao 12º período</span>
+    <h1>Seu plantão com a resposta <em>na palma da mão</em>.</h1>
+    <p class="lead">O SalvaMed reúne, em um só app, o que você mais consulta nos primeiros atendimentos: drogas, antibióticos, receitas, intubação, ventilação, RX e ECG. Rápido de achar, fácil de usar.</p>
+    <a class="btn" href="#entrar">Quero entrar no canal</a>
+    <p class="note">Grátis. Durante uma semana, mostramos no canal do WhatsApp tudo o que o SalvaMed faz.</p>
+  </div>
+  <div class="logo-card"><img src="logo.jpg" alt="SalvaMed — O socorro chegou"></div>
+</div></div>
+
+<section><div class="wrap">
+  <h2>O que tem dentro</h2>
+  <p class="sub">Módulos pensados para a rotina do pronto-socorro e da enfermaria.</p>
+  <div class="grid">
+    <div class="card"><div class="ic">💉</div><h3>Drogas Vasoativas</h3><p>Consulta rápida para o paciente instável.</p></div>
+    <div class="card"><div class="ic">🧫</div><h3>Antibióticos EV</h3><p>Opções por situação clínica, na hora de prescrever.</p></div>
+    <div class="card"><div class="ic">📝</div><h3>Receitas Prontas</h3><p>Modelos prontos para agilizar a alta e o ambulatório.</p></div>
+    <div class="card"><div class="ic">🩺</div><h3>Principais Injetáveis no PS</h3><p>As medicações que mais aparecem no plantão.</p></div>
+    <div class="card"><div class="ic">🧪</div><h3>Pacotes de Exames</h3><p>Combinações de exames por quadro clínico.</p></div>
+    <div class="card"><div class="ic">🛏️</div><h3>Prescrições para Internação</h3><p>Ponto de partida para prescrever na enfermaria.</p></div>
+    <div class="card"><div class="ic">🐍</div><h3>Animais Peçonhentos</h3><p>Prescrição para acidentes com animais peçonhentos.</p></div>
+    <div class="card"><div class="ic">🫁</div><h3>Intubação e Ventilação</h3><p>Ajuste inicial do ventilador com cálculo de peso predito e volume corrente.</p></div>
+    <div class="card"><div class="ic">🩻</div><h3>RX Compara</h3><p>Compare achados de radiografia lado a lado.</p></div>
+    <div class="card"><div class="ic">📈</div><h3>ECG Compara</h3><p>Compare traçados de ECG para fixar o padrão.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>Como funciona</h2>
+  <p class="sub">Simples, do cadastro ao primeiro uso.</p>
+  <div class="steps">
+    <div class="step"><b>Preencha</b><span>Nome, WhatsApp e e-mail em 30 segundos.</span></div>
+    <div class="step"><b>Entre no canal</b><span>Você recebe o convite do canal do WhatsApp logo após o cadastro.</span></div>
+    <div class="step"><b>Veja o app por dentro</b><span>Uma semana mostrando cada funcionalidade, com exemplos reais.</span></div>
+  </div>
+</div></section>
+
+<section id="entrar"><div class="wrap">
+  <div>
+    <h2>Entre no canal e veja o SalvaMed por dentro</h2>
+    <p class="sub">Uma semana de conteúdo sobre cada funcionalidade do app, direto no seu WhatsApp. Quem entra primeiro acompanha tudo desde o início.</p>
+  </div>
+  <form id="f" novalidate>
+    <input class="hp" type="text" name="site" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <label for="nome">Nome</label>
+    <input id="nome" name="nome" autocomplete="name" required placeholder="Seu nome">
+    <label for="wpp">WhatsApp</label>
+    <input id="wpp" name="whatsapp" type="tel" inputmode="numeric" autocomplete="tel" required placeholder="(64) 99999-9999">
+    <label for="email">E-mail</label>
+    <input id="email" name="email" type="email" autocomplete="email" required placeholder="voce@email.com">
+    <label for="per">Período da faculdade</label>
+    <select id="per" name="periodo" required>
+      <option value="">Selecione</option>
+      <option>9º período</option><option>10º período</option><option>11º período</option><option>12º período</option><option>Já formado(a)</option><option>Outro</option>
+    </select>
+    <label class="chk"><input type="checkbox" id="lgpd" required> <span>Concordo em receber contato do SalvaMed por WhatsApp e e-mail sobre o SalvaMed e aceito o uso dos meus dados para esse fim (LGPD). Posso sair da lista quando quiser.</span></label>
+    <button class="btn" id="btn" type="submit">Quero entrar no canal</button>
+    <div class="msg" id="msg" role="status"></div>
+    <a class="btn" id="grp" href="#" target="_blank" rel="noopener" style="display:none;text-align:center">Entrar no canal do WhatsApp</a>
+  </form>
+</div></section>
+
+<div class="wrap"><p class="disc"><b>Aviso importante:</b> o SalvaMed é uma ferramenta de apoio à consulta e ao estudo. Não substitui o julgamento clínico, a supervisão do preceptor/médico responsável nem os protocolos da instituição. Confira sempre doses e condutas antes de aplicar.</p></div>
+<footer>© SalvaMed · O socorro chegou</footer>
+
+<script>
+// >>> COLE AQUI o endereço do Google Apps Script (ver instruções). Enquanto estiver vazio, o formulário avisa e NÃO perde dados em silêncio.
+const ENDPOINT = "";
+// >>> COLE AQUI o link do canal do WhatsApp (https://whatsapp.com/channel/...). Vazio = só mostra a mensagem de confirmação.
+const CANAL_URL = "https://whatsapp.com/channel/0029Vb9Y29i1t90fJWmAxC1f";
+
+const $ = s => document.querySelector(s);
+const wpp = $('#wpp');
+wpp.addEventListener('input', () => {
+  let d = wpp.value.replace(/\D/g,'').slice(0,11), o = d;
+  if (d.length > 2) o = '(' + d.slice(0,2) + ') ' + d.slice(2);
+  if (d.length > 7) o = '(' + d.slice(0,2) + ') ' + d.slice(2,7) + '-' + d.slice(7);
+  wpp.value = o;
+});
+const q = new URLSearchParams(location.search);
+const origem = q.get('utm_source') || q.get('src') || 'direto';
+
+$('#f').addEventListener('submit', async e => {
+  e.preventDefault();
+  const m = $('#msg'), b = $('#btn'), f = e.target;
+  m.className = 'msg'; m.textContent = '';
+  if (f.site.value) return; // robô
+  const digits = wpp.value.replace(/\D/g,'');
+  if (!f.nome.value.trim() || digits.length < 10 || !/^\S+@\S+\.\S+$/.test(f.email.value) || !f.periodo.value) {
+    m.className = 'msg err'; m.textContent = 'Confira nome, WhatsApp, e-mail e período.'; return;
+  }
+  if (!$('#lgpd').checked) { m.className = 'msg err'; m.textContent = 'Marque a autorização para continuar.'; return; }
+  if (!ENDPOINT) { m.className = 'msg err'; m.textContent = 'Formulário ainda não conectado. Tente novamente em instantes.'; return; }
+  b.disabled = true; b.textContent = 'Enviando…';
+  const body = new URLSearchParams({
+    nome: f.nome.value.trim(), whatsapp: '55' + digits, email: f.email.value.trim().toLowerCase(),
+    periodo: f.periodo.value, origem, consentimento: 'sim', data: new Date().toISOString()
+  });
+  try {
+    await fetch(ENDPOINT, { method: 'POST', mode: 'no-cors', body });
+    f.reset();
+    m.className = 'msg ok'; m.textContent = 'Pronto! Você está dentro. 💙';
+    if (CANAL_URL) { const g = $('#grp'); g.href = CANAL_URL; g.style.display = 'block'; b.style.display = 'none'; } else { m.textContent += ' Enviaremos o convite do canal no seu WhatsApp.'; }
+  } catch (_) {
+    m.className = 'msg err'; m.textContent = 'Não foi possível enviar. Verifique a internet e tente de novo.';
+  }
+  if (b.style.display !== 'none') { b.disabled = false; b.textContent = 'Quero entrar no canal'; }
+});
+</script>
+</body>
+</html>
